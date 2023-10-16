@@ -3,6 +3,8 @@ using Application.Interfaces;
 using Domain.Commands;
 using Domain.Handlers;
 using Domain.Interfaces;
+using Domain.Queries;
+using Infrastructure.Data.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,18 +17,22 @@ namespace Application.Services
     public class LoginService:ILoginService
 
     {
-        private IUserHandle _handler;
-        public LoginService(IUserHandle handler)
+        private ILoginHandle _handler;
+        public LoginService(ILoginHandle handler)
         {
             _handler = handler;
         }
 
-        public void createUser(CreateUserCommand request)
+
+
+        public async Task<Usuario> GetByLoginSenha(LoginQuery login)
         {
+            var resultado = await _handler.handle(login);
 
-
-            _handler.handle(request);
-       
+            return resultado;
         }
+
+
+
     }
 }

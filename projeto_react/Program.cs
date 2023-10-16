@@ -5,6 +5,10 @@ using Domain.Interfaces;
 using Domain.Handlers;
 using Application.Services;
 using Application.Interfaces;
+using Infrastructure.Interfaces;
+using Infrastructure.Repository.Dapper;
+using Microsoft.Data.Sqlite;
+using System.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,10 +20,17 @@ builder.Services.AddDbContext<RebornLoginContext>(options =>
 {
     options.UseSqlite("Data Source=BabyReborn.db");
     
-    });
+});
+builder.Services.AddTransient<IDbConnection>(b =>
+{
+    return new SqliteConnection("Data Source=BabyReborn.db");
+});
 
 builder.Services.AddTransient<IUserHandle, UserHandle>();
 builder.Services.AddTransient<ILoginService, LoginService>();
+builder.Services.AddTransient<IUserRepository, UserRepository>();
+builder.Services.AddTransient<ILoginHandle, LoginHandle>();
+builder.Services.AddTransient<IUsuarioService, UsuarioService>();
 
 var app = builder.Build();
 

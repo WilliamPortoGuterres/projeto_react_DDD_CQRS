@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Commands
+namespace Domain.Queries
 {
-    public class AutenticarCommand
+    public class LoginQuery
     {
         public string Name { get; set; }
 

@@ -3,14 +3,15 @@ import { Container } from 'reactstrap';
 import { NavMenu } from './NavMenu';
 import CryptoJS from 'crypto-js';
 
-export class Login extends Component {
-    static displayName = Login.name;
+export class CreateLogin extends Component {
+    static displayName = CreateLogin.name;
 
     constructor(props) {
         super(props);
         this.state = {
             username: '',
-            password: ''
+            password: '',
+            passwordSecond: ''
         };
     }
 
@@ -26,11 +27,20 @@ export class Login extends Component {
 
     handleSubmit = (event) => {
         event.preventDefault();
+        if (this.state.password != this.state.passwordSecond) {
+
+            alert("As senhas devem ser iguais")
+            return
+        }
+
         const request = {
             name: this.state.username,
             password: CryptoJS.AES.encrypt(this.state.password, 'secret_key').toString()
         }
-        fetch('/api/logins/loga', {
+
+        
+
+        fetch('/api/usuario/add', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -39,13 +49,15 @@ export class Login extends Component {
         })
             .then(response => response.json())
             .then(data => {
+                console.log(data)
                 alert(data.mensagem)
+
             })
             .catch(error => {
-                // Trate qualquer erro que possa ocorrer
+
                 console.error('Houve um problema com a requisição fetch:', error);
             });
-       
+
     }
 
     render() {
@@ -75,9 +87,28 @@ export class Login extends Component {
                                     onChange={this.handleInputChange}
                                 />
                             </div>
-                            <p>{this.state.username}</p>
+                            <div className="mb-3">
+                                <label className="form-label">Repita a Senha:</label>
+                                <input
+                                    type="password"
+                                    name="passwordSecond"
+                                    className="form-control"
+                                    value={this.state.passwordSecond}
+                                    onChange={this.handleInputChange}
+                                />
+                            </div>
+
                             <div className="text-center">
-                                <button type="submit" className="btn btn-primary">Entrar</button>
+                                <button
+                                    type="submit"
+                                    className="btn btn-primary"
+                                    disabled={this.state.password !== this.state.passwordSecond ||
+                                        !this.state.password || !this.state.passwordSecond || !this.state.username}
+                                >
+                                    Entrar
+                                </button>
+
+
                             </div>
                         </form>
                     </div>

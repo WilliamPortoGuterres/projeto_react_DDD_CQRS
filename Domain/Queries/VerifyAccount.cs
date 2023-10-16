@@ -4,12 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Commands
+namespace Domain.Queries
 {
-    public class AutenticarCommand
+    public class VerifyAccount
     {
         public string Name { get; set; }
-
-        public string Password { get; set; }
     }
 }

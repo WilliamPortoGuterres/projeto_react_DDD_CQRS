@@ -7,30 +7,49 @@ using System.Threading.Tasks;
 using Infrastructure.Data;
 using Infrastructure.Data.Entities;
 using Domain.Interfaces;
+using Domain.Queries;
+using Microsoft.EntityFrameworkCore;
+using Infrastructure.Repository.Dapper;
+using Infrastructure.Interfaces;
 
 namespace Domain.Handlers
 {
     public class UserHandle:IUserHandle
     {
         private readonly RebornLoginContext _context;
-        public UserHandle(RebornLoginContext context) {
+        private readonly IUserRepository _contextSecond;
+        public UserHandle(RebornLoginContext context,IUserRepository contextSecond) {
 
             _context = context;
+            _contextSecond = contextSecond;
         }
         
-        public void handle(CreateUserCommand request) 
+        public async Task<bool> handle(CreateUserCommand request) 
         {
-            var newusuario = new Usuario();
+            var usuario = new Usuario();
             
-            newusuario.Name = request.Name;
-            newusuario.Password = request.Password;
+            usuario.Name = request.Name;
+            usuario.Password = request.Password;
 
-            _context.Usuario.Add(newusuario);
+            await _context.Usuario.AddAsync(usuario);
+           var result =  await _context.SaveChangesAsync();
 
-        
+            return result>0;
+
         }
-        public void handle(AutenticarCommand request) { }
+        public Task<bool> handle(AutenticarCommand request)
+        {
+            return (Task<bool>)Task.CompletedTask;
+        }
 
+        public async Task<bool> handle(VerifyAccount request)
+        {
 
+           var userExists = await _context.Usuario
+                                    .AnyAsync(u => u.Name == request.Name);
+            return userExists;
+        }
+
+      
     }
 }
