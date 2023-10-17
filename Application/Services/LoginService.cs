@@ -18,18 +18,24 @@ namespace Application.Services
 
     {
         private ILoginHandle _handler;
-        public LoginService(ILoginHandle handler)
+        private IAutenticarTokenService _Token;
+        public LoginService(ILoginHandle handler, IAutenticarTokenService token)
         {
             _handler = handler;
+            _Token = token;
         }
 
 
 
-        public async Task<Usuario> GetByLoginSenha(LoginQuery login)
+        public async Task<string> GetByLoginSenha(LoginQuery login)
         {
             var resultado = await _handler.handle(login);
+            
+            var name = resultado.Name;
+            
+            var tokenAutenticado = _Token.GerarToken(name);
 
-            return resultado;
+            return tokenAutenticado;
         }
 
 

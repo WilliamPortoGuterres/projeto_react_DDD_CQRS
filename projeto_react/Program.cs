@@ -9,6 +9,9 @@ using Infrastructure.Interfaces;
 using Infrastructure.Repository.Dapper;
 using Microsoft.Data.Sqlite;
 using System.Data;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,6 +34,26 @@ builder.Services.AddTransient<ILoginService, LoginService>();
 builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddTransient<ILoginHandle, LoginHandle>();
 builder.Services.AddTransient<IUsuarioService, UsuarioService>();
+builder.Services.AddTransient<IAutenticarTokenService, AutenticarTokenService>();
+builder.Services.AddTransient<ICriptografiaService, CriptografiaService>();
+builder.Services.AddTransient<ICriptografiaHandle, CriptografiaHandle>();
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes("your_secret_key")),
+        ValidateIssuer = false,
+        ValidateAudience = false
+    };
+});
+
 
 var app = builder.Build();
 
@@ -41,6 +64,8 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+app.UseAuthentication();
+app.UseAuthorization();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();

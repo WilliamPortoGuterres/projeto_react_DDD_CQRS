@@ -26,10 +26,14 @@ export class Login extends Component {
 
     handleSubmit = (event) => {
         event.preventDefault();
+
+        
+
         const request = {
             name: this.state.username,
-            password: CryptoJS.AES.encrypt(this.state.password, 'secret_key').toString()
+            password: this.state.password
         }
+
         fetch('/api/logins/loga', {
             method: 'POST',
             headers: {
@@ -42,7 +46,7 @@ export class Login extends Component {
                 alert(data.mensagem)
             })
             .catch(error => {
-                // Trate qualquer erro que possa ocorrer
+                
                 console.error('Houve um problema com a requisição fetch:', error);
             });
        

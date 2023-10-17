@@ -45,8 +45,8 @@ namespace Domain.Handlers
         public async Task<bool> handle(VerifyAccount request)
         {
 
-           var userExists = await _context.Usuario
-                                    .AnyAsync(u => u.Name == request.Name);
+            var userExists = await _contextSecond.UserExists(request.Name);
+
             return userExists;
         }
 

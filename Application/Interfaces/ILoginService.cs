@@ -13,7 +13,7 @@ namespace Application.Interfaces
 {
     public interface ILoginService
     {
-        Task<Usuario> GetByLoginSenha(LoginQuery login);
+        Task<string> GetByLoginSenha(LoginQuery login);
         
 
     }

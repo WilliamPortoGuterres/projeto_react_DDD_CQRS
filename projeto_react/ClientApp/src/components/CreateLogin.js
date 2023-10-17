@@ -1,7 +1,7 @@
 ﻿import React, { Component } from 'react';
 import { Container } from 'reactstrap';
 import { NavMenu } from './NavMenu';
-import CryptoJS from 'crypto-js';
+
 
 export class CreateLogin extends Component {
     static displayName = CreateLogin.name;
@@ -33,9 +33,11 @@ export class CreateLogin extends Component {
             return
         }
 
+        
+
         const request = {
             name: this.state.username,
-            password: CryptoJS.AES.encrypt(this.state.password, 'secret_key').toString()
+            password: this.state.password
         }
 
         

@@ -17,6 +17,7 @@ namespace Application.Services
     {
         private readonly IUserRepository _userRepository;
         private IUserHandle _handler;
+        
      
         public UsuarioService(IUserRepository userRepository, IUserHandle handler) 
         { 

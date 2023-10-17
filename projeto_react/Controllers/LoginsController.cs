@@ -17,26 +17,29 @@ namespace projeto_react.Controllers
     public class LoginsController : ControllerBase
     {
 
-        private readonly ILoginService _service;
+        private readonly ILoginService _loginService;
+        private readonly ICriptografiaService _criptografiaService;
 
-        public LoginsController(ILoginService service)
+        public LoginsController(ILoginService loginService,ICriptografiaService criptografiaService)
         {
-
-            _service = service;
+            _criptografiaService = criptografiaService;
+            _loginService = loginService;
         }
 
         [HttpPost("Loga")]
         public async Task<JsonResult> Loga([FromBody] LoginQuery request)
         {
-
-
-           var response =await _service.GetByLoginSenha(request);
+            request.Password =await _criptografiaService.Criptografa(request.Password);
 
 
 
-            
+           var response =await _loginService.GetByLoginSenha(request);
 
-            return new JsonResult(temp);
+
+
+            var token = new { token = response };
+
+            return new JsonResult(token);
         }
 
        

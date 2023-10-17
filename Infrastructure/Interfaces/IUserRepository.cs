@@ -11,5 +11,6 @@ namespace Infrastructure.Interfaces
     public interface IUserRepository
     {
         public Task<Usuario> GetByLoginSenha(LoginQueryInfra login );
+        public Task<bool> UserExists(string login );
     }
 }

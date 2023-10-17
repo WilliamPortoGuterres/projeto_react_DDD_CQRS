@@ -23,15 +23,47 @@ namespace Infrastructure.Repository.Dapper
 
         public async Task<Usuario> GetByLoginSenha(LoginQueryInfra login)
         {
+            var responseQuery = new Usuario();
 
-            
+            try
             {
                 _connection.Open();
-                var response = await _connection.QueryFirstAsync <Usuario>("SELECT * FROM Usuarios WHERE Id = @login", new {login});
+                 responseQuery = await _connection.QueryFirstOrDefaultAsync<Usuario>("SELECT * FROM Usuario WHERE Name = @Name AND Password = @Password",
+                   new { Name = login.Name, Password = login.Password });
+                
 
-
-                return response;
             }
+            catch (Exception ex)
+            {
+                var message = ex.Message;
+                return new Usuario();
+            }
+
+            return responseQuery;
+
+
+        }
+        public async Task<bool> UserExists(string login)
+        {
+            var responseQuery = new Usuario();
+
+            try
+            {
+                _connection.Open();
+                 responseQuery = await _connection.QueryFirstOrDefaultAsync<Usuario>("SELECT * FROM Usuario WHERE Name = @Name",
+                   new { Name = login, });
+                
+
+            }
+            catch (Exception ex)
+            {
+                var message = ex.Message;
+                return false;
+            }
+            
+
+            return responseQuery!=null ;
+
 
         }
 
