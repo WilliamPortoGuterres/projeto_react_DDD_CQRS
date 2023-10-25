@@ -1,7 +1,7 @@
 ﻿import React, { Component } from 'react';
 import { Container } from 'reactstrap';
 import { NavMenu } from './NavMenu';
-import CryptoJS from 'crypto-js';
+import jwtDecode from "jwt-decode";
 
 export class Login extends Component {
     static displayName = Login.name;
@@ -27,7 +27,8 @@ export class Login extends Component {
     handleSubmit = (event) => {
         event.preventDefault();
 
-        
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
 
         const request = {
             name: this.state.username,
@@ -43,6 +44,12 @@ export class Login extends Component {
         })
             .then(response => response.json())
             .then(data => {
+                var tokenDecode = jwtDecode(data.token);
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('user', tokenDecode.nameid);
+
+                console.log(tokenDecode.nameid)
+
                 alert(data.mensagem)
             })
             .catch(error => {
@@ -79,7 +86,7 @@ export class Login extends Component {
                                     onChange={this.handleInputChange}
                                 />
                             </div>
-                            <p>{this.state.username}</p>
+                            
                             <div className="text-center">
                                 <button type="submit" className="btn btn-primary">Entrar</button>
                             </div>

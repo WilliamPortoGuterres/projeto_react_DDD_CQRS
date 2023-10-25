@@ -5,6 +5,7 @@ using Application.Services;
 using Domain.Commands;
 using Application.Interfaces;
 using Domain.Queries;
+using Microsoft.IdentityModel.Tokens;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -36,9 +37,9 @@ namespace projeto_react.Controllers
            var response =await _loginService.GetByLoginSenha(request);
 
 
+            var mensage = response.IsNullOrEmpty() ? "usuario ou senha invalidos" : "autenticado com sucesso";
 
-            var token = new { token = response };
-
+            var token = new { token = response,mensage  };
             return new JsonResult(token);
         }
 

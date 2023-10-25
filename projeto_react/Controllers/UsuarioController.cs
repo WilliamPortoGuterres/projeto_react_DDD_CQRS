@@ -12,12 +12,12 @@ namespace projeto_react.Controllers
     {
 
         private readonly IUsuarioService _service;
-        private readonly ICriptografiaService _criptografiaService;
-        public UsuarioController(IUsuarioService service, ICriptografiaService criptografiaService)
+        private readonly ICriptografiaService _encriptedService;
+        public UsuarioController(IUsuarioService service, ICriptografiaService encriptedService)
         {
 
             _service = service;
-            _criptografiaService = criptografiaService;
+            _encriptedService = encriptedService;
         }
 
 
@@ -40,7 +40,7 @@ namespace projeto_react.Controllers
             if (!existe)
             {
 
-                request.Password = await _criptografiaService.Criptografa(request.Password);
+                request.Password = await _encriptedService.Criptografa(request.Password);
 
                 var resultado = await _service.CreateUser(request);
 

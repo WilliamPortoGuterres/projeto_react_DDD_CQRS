@@ -30,12 +30,23 @@ namespace Application.Services
         public async Task<string> GetByLoginSenha(LoginQuery login)
         {
             var resultado = await _handler.handle(login);
-            
-            var name = resultado.Name;
-            
-            var tokenAutenticado = _Token.GerarToken(name);
 
-            return tokenAutenticado;
+            string response = "";
+
+            if (resultado != null)
+            {
+
+                var name = resultado.Name;
+
+                response = _Token.GerarToken(name);
+
+            }
+            else
+            {
+                response = "";
+            }
+
+            return response;
         }
 
 
